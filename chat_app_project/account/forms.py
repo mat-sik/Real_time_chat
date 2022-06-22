@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 
-from chat_app.models import Account
+from account.models import Account
 
 class AccountCreationForm(UserCreationForm):
 
