@@ -131,4 +131,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # my changes
-AUTH_USER_MODEL = 'chat_app.CustomUser'
+AUTH_USER_MODEL = 'chat_app.Account'
