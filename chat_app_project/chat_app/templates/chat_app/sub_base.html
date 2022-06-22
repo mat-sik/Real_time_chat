@@ -1,0 +1,13 @@
+{% extends 'chat_app/base.html' %}
+
+{% block 'contents' %}
+
+    {% block 'sub_contents' %} {% endblock %}
+
+    {% block 'go_back' %}
+        <a href="{% url 'chat_app:index' %}">
+            <button class="btn btn-secondary">Go back</button>
+        </a>
+    {% endblock %}
+
+{% endblock %}

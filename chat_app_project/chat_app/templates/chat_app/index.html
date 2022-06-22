@@ -1,0 +1,24 @@
+{% extends 'chat_app/base.html' %}
+
+{% block 'contents' %}
+<h1>Chat<h1>
+
+{% if user.is_authenticated %}
+<p>User is logged in :)</p>
+<p>Username -->  {{ user.email }}</p>
+
+<a href="{% url 'chat_app:logout' %}">
+    <button class="btn btn-secondary">Logout</button>
+</a>
+{% else %}
+<p>User is not logged in :(</p>
+
+<a href="{% url 'chat_app:login' %}">
+    <button class="btn btn-secondary">Login</button>
+</a>
+
+<a href="{% url 'chat_app:register' %}">
+    <button class="btn btn-secondary">Register</button>
+</a>
+{% endif %}
+{% endblock %}

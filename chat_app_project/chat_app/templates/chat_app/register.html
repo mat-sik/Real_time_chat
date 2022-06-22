@@ -1,0 +1,9 @@
+{% extends 'chat_app/sub_base.html' %}
+
+{% block 'sub_contents' %}
+<form action="{% url 'chat_app:register' %}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+{% endblock %}
