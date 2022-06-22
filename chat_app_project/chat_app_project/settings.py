@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # my apps
-    'chat_app'
+    'chat_app',
     'account'
 ]
 
@@ -131,4 +131,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # my changes
-AUTH_USER_MODEL = 'chat_app.Account'
+AUTH_USER_MODEL = 'account.Account'

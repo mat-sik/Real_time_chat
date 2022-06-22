@@ -1,6 +1,6 @@
 from django.db import models
 
-from chat_app_project.account.models import Account
+from account.models import Account
 
 # Create your models here.
 class Message(models.Model):
@@ -24,8 +24,13 @@ class FriendsList(models.Model):
     # Every user has his own friendslist.
     user = models.OneToOneField(
         Account,
+        related_name="friends_list_owner",
         on_delete=models.PROTECT,
         primary_key=True,
     )
     # User can have many friends.
-    friends = models.ForeignKey(Account, on_delete=models.PROTECT)
+    friends = models.ForeignKey(
+        Account, 
+        related_name="friends_list",
+        on_delete=models.PROTECT
+    )

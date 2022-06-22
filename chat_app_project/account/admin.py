@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from chat_app_project.account.models import Account
+from account.models import Account
 
 # Register your models here.
 class UserAdminConfig(UserAdmin):
