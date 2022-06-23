@@ -1,9 +1,11 @@
 {% extends 'chat_app/sub_base.html' %}
 
 {% block 'sub_contents' %}
-<form action="{% url 'chat_app:login' %}" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" class="btn btn-primary" value="Submit">
-</form>
+<div class="row">
+    <form action="{% url 'chat_app:login' %}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+</div>
 {% endblock %}
