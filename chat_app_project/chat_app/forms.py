@@ -41,3 +41,7 @@ class AddFriendForm(forms.Form):
                         messages.ERROR, 
                         "You can not add yourself as friend."
                     )    
+
+
+class AddRoomForm(forms.Form):
+    chatroom_name = forms.CharField(max_length=30)

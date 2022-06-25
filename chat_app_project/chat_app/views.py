@@ -43,18 +43,6 @@ class ViewIndex(View):
         return request
 
 
-class ViewRoom(View):
-    template_name = "chat_app/chatroom.html"
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            context = {"room_name": kwargs.get("room_name")}
-
-            return render(request, self.template_name, context)
-        else:
-            return redirect("chat_app:login")
-
-
 class ViewAddFriend(View):
     template_name = "chat_app/index.html"
     form_class = AddFriendForm
@@ -79,5 +67,21 @@ class ViewAddFriend(View):
                         "Invalid data submited."
                     )       
             return redirect("chat_app:index")
+        else:
+            return redirect("chat_app:login")
+
+
+class ViewAddRoom(View):
+    pass
+
+
+class ViewRoom(View):
+    template_name = "chat_app/chatroom.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            context = {"room_name": kwargs.get("room_name")}
+
+            return render(request, self.template_name, context)
         else:
             return redirect("chat_app:login")
