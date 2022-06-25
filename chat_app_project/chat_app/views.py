@@ -5,6 +5,7 @@ from django.contrib import messages
 from chat_app.forms import AddFriendForm, AddRoomForm
 from chat_app.models import FriendshipRelation
 
+
 # Create your views here.
 class ViewIndex(View):
     template_name = "chat_app/index.html"
@@ -42,9 +43,6 @@ class ViewIndex(View):
             return render(request, self.template_name, context)
         else:
             return redirect("chat_app:login")
-
-    def post(self, request, *args, **kwargs):
-        return request
 
 
 class ViewAddFriend(View):
