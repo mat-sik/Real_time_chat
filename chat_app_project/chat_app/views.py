@@ -14,17 +14,6 @@ class ViewIndex(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            # aquired_friends_requests = FriendshipRelation.objects.filter(friend=request.user)
-            # send_friends_requests = FriendshipRelation.objects.filter(user=request.user)
-            
-            # asked_users = set([i.friend for i in send_friends_requests])
-            # pending = aquired_friends_requests.exclude(user__in=asked_users)
-            # friends = aquired_friends_requests.filter(user__in=asked_users)
-            
-            # friend_users = Account.objects.filter(id__in=set(i.user.id for i in friends))
-            # pending_users = Account.objects.filter(id__in=set(i.user.id for i in pending))
-
-
             form_add_friend = self.form_class_add_friend()
 
             # Set of users who sent request to current user.
