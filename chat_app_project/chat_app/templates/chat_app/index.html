@@ -40,7 +40,15 @@
 <div>
     <form action="{% url 'chat_app:add_friend' %}" method="post">
         {% csrf_token %}
-        {{form}}
+        {{form_add_friend}}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+</div>
+
+<div>
+    <form action="{% url 'chat_app:add_room' %}" method="post">
+        {% csrf_token %}
+        {{form_add_room}}
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
 </div>

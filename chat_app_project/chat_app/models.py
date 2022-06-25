@@ -6,8 +6,13 @@ from account.models import Account
 class ChatRoom(models.Model):
     # Each chat chat has it's name.
     chat_name = models.CharField(max_length=30)
-    # There can be many users in a single chatroom.
-    users = models.ForeignKey(Account, on_delete=models.PROTECT)
+
+
+class ChatUsers(models.Model):
+    # Group of users is assigned to singel chat.
+    chat = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
+    # There can be many users in a single chatgroup.
+    user = models.ForeignKey(Account, on_delete=models.PROTECT)
 
 
 class Message(models.Model):
