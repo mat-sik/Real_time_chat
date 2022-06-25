@@ -4,7 +4,6 @@ from django.contrib import messages
 
 from chat_app.forms import AddFriendForm, AddRoomForm
 from chat_app.models import FriendshipRelation
-from account.models import Account
 
 # Create your views here.
 class ViewIndex(View):
