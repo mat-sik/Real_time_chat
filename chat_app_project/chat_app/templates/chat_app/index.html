@@ -1,17 +1,27 @@
 {% extends 'chat_app/base.html' %}
 
 {% block 'contents' %}
-<h1>Chat<h1>
-
+<div>
+    <h1>Chat</h1>
+</div>
 {% if user.is_authenticated %}
+<div>
     <p>User is logged in :)</p>
-    <p>Username -->  {{ user.email }}</p>
+    <p>Username -->  {{ user.user_name }}</p>
+    <p>Mail -->  {{ user.email }}</p>
+</div>
 
+<div>
     <a href="{% url 'chat_app:logout' %}">
         <button class="btn btn-secondary">Logout</button>
     </a>
+</div>
 {% else %}
+<div>
     <p>User is not logged in :(</p>
+</div>
+
+<div>
     <ul class="list-inline">
         <li class="list-inline-item">
             <a href="{% url 'chat_app:login' %}">
@@ -24,5 +34,41 @@
             </a>
         </li>
     </ul>
+</div>
 {% endif %}
+
+<div>
+    <form action="{% url 'chat_app:add_friend' %}" method="post">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+</div>
+
+<div>
+    <h2>Friend list</h2>
+    <ul>
+        {% for friend in friends %}
+        <li>{{friend.user_name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>
+    <h2>Pending requests</h2>
+    <table>
+        {% for pending_request in pending %}
+        <td>
+            {{pending_request.user_name}}
+        </td>
+        <td>
+            <form action="{% url 'chat_app:add_friend' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="friend_username" value="{{pending_request.user_name}}">
+                <input type="submit" class="btn btn-secondary" value="Add">
+            </form>
+        </td>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}
