@@ -7,7 +7,7 @@
 {% if user.is_authenticated %}
 <div>
     <p>User is logged in :)</p>
-    <p>Username -->  {{ user.user_name }}</p>
+    <p>Username -->  {{ user.username }}</p>
     <p>Mail -->  {{ user.email }}</p>
 </div>
 
@@ -55,29 +55,51 @@
 
 <div>
     <h2>Friend list</h2>
-    <ul>
-        {% for friend in friends %}
-        <li>{{friend.user_name}}</li>
+    <table>
+        {% for friend, chatroom in friends %}
+        <th>
+            <td>{{friend.username}}</td>
+            <td>
+                <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>{{chatroom.name}}</a>
+            </td>
+        </th>
         {% endfor %}
-    </ul>
+    </table>
 </div>
 
 <div>
     <h2>Pending requests</h2>
     <table>
-        {% for pending_request in pending %}
+        {% for pending_user, chatroom in pending %}
         <tr>
             <td>
-                {{pending_request.user_name}}
+                {{pending_user.username}}
+            </td>
+            <td>
+                <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>{{chatroom.name}}</a>
             </td>
             <td>
                 <form action="{% url 'chat_app:add_friend' %}" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="friend_username" value="{{pending_request.user_name}}">
+                    <input type="hidden" name="friend_username" value="{{pending_user.username}}">
                     <input type="submit" class="btn btn-secondary" value="Add">
                 </form>
             </td>
         </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div>
+    <h2>Send requests</h2>
+    <table>
+        {% for friend, chatroom in send %}
+        <th>
+            <td>{{friend.username}}</td>
+            <td>
+                <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>{{chatroom.name}}</a>
+            </td>
+        </th>
         {% endfor %}
     </table>
 </div>

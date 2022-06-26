@@ -6,6 +6,8 @@ from account.models import Account
 class ChatRoom(models.Model):
     # Each chat chat has it's name.
     name = models.CharField(max_length=30)
+    # Chats created on friend request will be private - for two people only.
+    is_private = models.BooleanField(default=True)
 
 
 class ChatRoomUsers(models.Model):

@@ -13,12 +13,15 @@ class AddFriendForm(forms.Form):
 
     def username_exists(self):
         friend_username = self.cleaned_data.get("friend_username")
-        return Account.objects.filter(user_name=friend_username).count() > 0
+        return Account.objects.filter(username=friend_username).count() > 0
+
+    def is_initial_friend_request(self, user, friend):
+        return FriendshipRelation.objects.filter(user=friend, friend=user).count() == 0
 
     def save(self, request):
         user = request.user
         friend_username = self.cleaned_data.get("friend_username")
-        friend = Account.objects.get(user_name=friend_username)
+        friend = Account.objects.get(username=friend_username)
 
         if not user == friend:
             try:
@@ -26,6 +29,19 @@ class AddFriendForm(forms.Form):
                     user=user,
                     friend=friend
                 )
+                # creates private chat with friend
+                if self.is_initial_friend_request(user, friend):
+                    new_chatroom = ChatRoom.objects.create(
+                        name = f"{user.username}-{friend.username}_chatroom"
+                    )
+                    ChatRoomUsers.objects.create(
+                        chatroom = new_chatroom,
+                        user = user
+                    )
+                    ChatRoomUsers.objects.create(
+                        chatroom = new_chatroom,
+                        user = friend
+                    )
                 messages.add_message(
                     request, 
                     messages.INFO, 
@@ -45,10 +61,10 @@ class AddFriendForm(forms.Form):
             )    
 
 
-class AddRoomForm(forms.Form):
+class AddChatRoomForm(forms.Form):
     chat_name = forms.CharField(max_length=30)
     def __init__(self, request, friends=None, *args, **kwargs):
-        super(AddRoomForm, self).__init__(*args, **kwargs)
+        super(AddChatRoomForm, self).__init__(*args, **kwargs)
         if friends is None:
             aquired_friends_requests = set([
                 relation.user for relation in
@@ -75,7 +91,8 @@ class AddRoomForm(forms.Form):
     @transaction.atomic
     def save(self, request):
         new_chatroom = ChatRoom.objects.create(
-            name = self.cleaned_data.get("chat_name")
+            name = self.cleaned_data.get("chat_name"),
+            is_private = False
         )
         ChatRoomUsers.objects.create(
             chatroom = new_chatroom,

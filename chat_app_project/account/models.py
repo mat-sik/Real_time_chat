@@ -7,15 +7,15 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class CustomAccountManager(BaseUserManager):
-    def create_user(self, email, user_name, password, **other_fields):
+    def create_user(self, email, username, password, **other_fields):
         if not email:
             raise ValueError(_("You must provide an email address"))
-        if not user_name:
+        if not username:
             raise ValueError(_("You must provide an user name"))
 
         user = self.model(
             email=self.normalize_email(email), 
-            user_name=user_name,
+            username=username,
             is_active=True,
             **other_fields
         )
@@ -23,7 +23,7 @@ class CustomAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, user_name, password, **other_fields):
+    def create_superuser(self, email, username, password, **other_fields):
         other_fields.setdefault("is_staff", True)
         other_fields.setdefault("is_superuser", True)
         
@@ -35,12 +35,12 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError(
                 _("Superuser must be assigned to is_superuser=True.")
             )
-        return self.create_user(email, user_name, password, **other_fields)
+        return self.create_user(email, username, password, **other_fields)
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=60, unique=True)
-    user_name = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
 
@@ -50,10 +50,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user_name']
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.user_name
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return self.is_superuser and self.is_active

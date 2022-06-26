@@ -17,7 +17,7 @@ const chatSocket = new WebSocket(
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
     document.querySelector("#chat-text").value += (
-        data.user_name + ": " + data.message + "\n"
+        data.username + ": " + data.message + "\n"
     );
 }
 
@@ -28,7 +28,7 @@ document.querySelector("#submit").onclick = function (event) {
         JSON.stringify(
             {
                 "message": message,
-                "user_name": userUsername
+                "username": userUsername
             }
         )
     );

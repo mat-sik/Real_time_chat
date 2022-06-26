@@ -9,7 +9,7 @@
 <input id="submit" type="button" value="Send">
 
 {{chatroom.id|json_script:"chatroom-id"}}
-{{user.user_name|json_script:"user-username"}}
+{{user.username|json_script:"user-username"}}
 <script src="{% static 'chat_app/ws_chat_client.js' %}"></script>
 
 {% endblock %}

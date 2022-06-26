@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 
-from chat_app.forms import AddFriendForm, AddRoomForm
+from chat_app.forms import AddFriendForm, AddChatRoomForm
 from chat_app.models import FriendshipRelation, ChatRoom, ChatRoomUsers
 
 
@@ -10,7 +10,7 @@ from chat_app.models import FriendshipRelation, ChatRoom, ChatRoomUsers
 class ViewIndex(View):
     template_name = "chat_app/index.html"
     form_class_add_friend = AddFriendForm
-    form_class_add_room = AddRoomForm
+    form_class_add_room = AddChatRoomForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -27,21 +27,45 @@ class ViewIndex(View):
                 FriendshipRelation.objects.filter(user=request.user)
             ])
 
-            # Set of users whoes request hasn't been accepted yet.
+            # Set of users who sent request to current user but hasn't been answered to.
             pending = aquired_friends_requests.difference(send_friends_requests)
-            # Set of users whoes requests has been accepted.
+            # Set of users who are friends with current user.
             friends = aquired_friends_requests.intersection(send_friends_requests)
 
             form_add_room = self.form_class_add_room(request, friends)
-
+            # Set of chatroom groups that current user is in.
             chatrooms_users = ChatRoomUsers.objects.filter(user=request.user)
-            chatrooms = [i.chatroom for i in chatrooms_users]
+            
+            private_chatrooms_friends = []
+            private_chatrooms_pending = []
+            private_chatrooms_send = []
+            chatrooms = []
+
+            for chatrooms_user in chatrooms_users:
+                chatroom = chatrooms_user.chatroom
+                if chatroom.is_private:
+                    # user who is in private chat with current user.
+                    chatroom_friend = list(
+                        chatroom.chatroomusers_set.exclude(
+                            user_id=request.user.id
+                        )
+                    )[0].user
+
+                    if chatroom_friend in friends:
+                        private_chatrooms_friends.append((chatroom_friend, chatroom))
+                    elif chatroom_friend in pending:
+                        private_chatrooms_pending.append((chatroom_friend, chatroom))
+                    else:
+                        private_chatrooms_send.append((chatroom_friend, chatroom))
+                else:
+                    chatrooms.append(chatrooms)
 
             context = {
                 "form_add_friend": form_add_friend,
                 "form_add_room": form_add_room,
-                "pending": pending,
-                "friends": friends,
+                "friends": private_chatrooms_friends,
+                "pending": private_chatrooms_pending,
+                "send": private_chatrooms_send,
                 "chatrooms": chatrooms
             }
             return render(request, self.template_name, context)
@@ -75,7 +99,7 @@ class ViewAddFriend(View):
 
 
 class ViewAddChatRoom(View):
-    form_class = AddRoomForm
+    form_class = AddChatRoomForm
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:

@@ -6,12 +6,12 @@ from account.models import Account
 # Register your models here.
 class UserAdminConfig(UserAdmin):
     ordering = ("-date_joined",)
-    search_fields = ("email", "user_name")
+    search_fields = ("email", "username")
     list_filter = (
-        "email", "user_name", "is_active", "is_staff", "is_superuser" 
+        "email", "username", "is_active", "is_staff", "is_superuser" 
     )
     list_display = (
-        "email", "user_name", "is_active", "is_staff", "is_superuser"
+        "email", "username", "is_active", "is_staff", "is_superuser"
     )
     readonly_fields = ("id", "date_joined", "last_login")
     fieldsets = ()
