@@ -2,6 +2,7 @@ import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         kwargs = self.scope.get("url_route").get("kwargs")
