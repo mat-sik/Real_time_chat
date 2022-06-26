@@ -22,15 +22,15 @@ class ViewIndex(View):
                 FriendshipRelation.objects.filter(friend=request.user)
             ])
             # Set of users who were sent request by current user.
-            send_friends_requests = set([
+            sent_friends_requests = set([
                 relation.friend for relation in
                 FriendshipRelation.objects.filter(user=request.user)
             ])
 
             # Set of users who sent request to current user but hasn't been answered to.
-            pending = aquired_friends_requests.difference(send_friends_requests)
+            pending = aquired_friends_requests.difference(sent_friends_requests)
             # Set of users who are friends with current user.
-            friends = aquired_friends_requests.intersection(send_friends_requests)
+            friends = aquired_friends_requests.intersection(sent_friends_requests)
 
             form_add_room = self.form_class_add_room(request, friends)
             # Set of chatroom groups that current user is in.
@@ -38,7 +38,7 @@ class ViewIndex(View):
             
             private_chatrooms_friends = []
             private_chatrooms_pending = []
-            private_chatrooms_send = []
+            private_chatrooms_sent = []
             chatrooms = []
 
             for chatrooms_user in chatrooms_users:
@@ -56,16 +56,16 @@ class ViewIndex(View):
                     elif chatroom_friend in pending:
                         private_chatrooms_pending.append((chatroom_friend, chatroom))
                     else:
-                        private_chatrooms_send.append((chatroom_friend, chatroom))
+                        private_chatrooms_sent.append((chatroom_friend, chatroom))
                 else:
-                    chatrooms.append(chatrooms)
+                    chatrooms.append(chatroom)
 
             context = {
                 "form_add_friend": form_add_friend,
                 "form_add_room": form_add_room,
                 "friends": private_chatrooms_friends,
                 "pending": private_chatrooms_pending,
-                "send": private_chatrooms_send,
+                "sent": private_chatrooms_sent,
                 "chatrooms": chatrooms
             }
             return render(request, self.template_name, context)
