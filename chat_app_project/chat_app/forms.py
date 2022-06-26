@@ -78,8 +78,8 @@ class AddRoomForm(forms.Form):
             name = self.cleaned_data.get("chat_name")
         )
         ChatRoomUsers.objects.create(
-                    chatroom = new_chatroom,
-                    user = get_object_or_404(Account, pk=request.user.id)
+            chatroom = new_chatroom,
+            user = get_object_or_404(Account, pk=request.user.id)
         )
         for user_id in self.cleaned_data.get("users"): # type: ignore
                 ChatRoomUsers.objects.create(

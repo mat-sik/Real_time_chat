@@ -70,10 +70,8 @@ class ViewAddFriend(View):
                     request, 
                     messages.ERROR, 
                     "Invalid data submited."
-                )       
-            return redirect("chat_app:index")
-
-        return redirect("chat_app:login")
+                )
+        return redirect("chat_app:index")
 
 
 class ViewAddChatRoom(View):
@@ -90,9 +88,7 @@ class ViewAddChatRoom(View):
                     messages.ERROR, 
                     "Invalid data submited."
                 )       
-            return redirect("chat_app:index")
-
-        return redirect("chat_app:login")
+        return redirect("chat_app:index")
 
 
 class ViewChatRoom(View):
@@ -114,6 +110,6 @@ class ViewChatRoom(View):
             request, 
             messages.ERROR, 
             "You are not authorised."
-        )   
+        )
 
         return redirect("chat_app:index")
