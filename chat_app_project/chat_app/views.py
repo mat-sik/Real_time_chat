@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 
 from chat_app.forms import AddFriendForm, AddRoomForm
-from chat_app.models import FriendshipRelation
+from chat_app.models import FriendshipRelation, ChatRoom, ChatRoomUsers
 
 
 # Create your views here.
@@ -34,15 +34,19 @@ class ViewIndex(View):
 
             form_add_room = self.form_class_add_room(request, friends)
 
+            chatrooms_users = ChatRoomUsers.objects.filter(user=request.user)
+            chatrooms = [i.chatroom for i in chatrooms_users]
+
             context = {
                 "form_add_friend": form_add_friend,
                 "form_add_room": form_add_room,
                 "pending": pending,
-                "friends": friends
+                "friends": friends,
+                "chatrooms": chatrooms
             }
             return render(request, self.template_name, context)
-        else:
-            return redirect("chat_app:login")
+
+        return redirect("chat_app:login")
 
 
 class ViewAddFriend(View):
@@ -63,41 +67,53 @@ class ViewAddFriend(View):
                     )
             else:
                 messages.add_message(
-                        request, 
-                        messages.ERROR, 
-                        "Invalid data submited."
-                    )       
+                    request, 
+                    messages.ERROR, 
+                    "Invalid data submited."
+                )       
             return redirect("chat_app:index")
-        else:
-            return redirect("chat_app:login")
+
+        return redirect("chat_app:login")
 
 
-class ViewAddRoom(View):
+class ViewAddChatRoom(View):
     form_class = AddRoomForm
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             form = self.form_class(request, friends=None, data=request.POST)
             if form.is_valid():
-                form.save()
+                form.save(request)
             else:
                 messages.add_message(
-                        request, 
-                        messages.ERROR, 
-                        "Invalid data submited."
-                    )       
+                    request, 
+                    messages.ERROR, 
+                    "Invalid data submited."
+                )       
             return redirect("chat_app:index")
-        else:
-            return redirect("chat_app:login")
+
+        return redirect("chat_app:login")
 
 
-class ViewRoom(View):
+class ViewChatRoom(View):
     template_name = "chat_app/chatroom.html"
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            context = {"room_name": kwargs.get("room_name")}
+            chatroom = get_object_or_404(ChatRoom, pk=kwargs.get("chatroom_id"))
+            chatroom_users = set([
+                chatroom_user.user for chatroom_user in
+                ChatRoomUsers.objects.filter(chatroom=chatroom)
+            ])
+            if request.user in chatroom_users:
 
-            return render(request, self.template_name, context)
-        else:
-            return redirect("chat_app:login")
+                context = {"chatroom": chatroom}
+                return render(request, self.template_name, context)
+
+        messages.add_message(
+            request, 
+            messages.ERROR, 
+            "You are not authorised."
+        )   
+
+        return redirect("chat_app:index")

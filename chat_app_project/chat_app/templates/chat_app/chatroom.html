@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block 'sub_contents' %}
-<h1>{{room_name}}</h1>
+<h1>{{chatroom.name}}</h1>
 
 <textarea id="chat-text" cols="80" rows="30"></textarea>
 <input id="input" type="text" size="80">
 <input id="submit" type="button" value="Send">
 
-{{room_name|json_script:"room-name"}}
+{{chatroom.id|json_script:"chatroom-id"}}
 {{user.user_name|json_script:"user-username"}}
 <script src="{% static 'chat_app/ws_chat_client.js' %}"></script>
 

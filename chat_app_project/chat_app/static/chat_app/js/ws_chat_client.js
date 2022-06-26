@@ -1,5 +1,5 @@
-const roomName = JSON.parse(
-    document.getElementById("room-name").textContent
+const chatroomId = JSON.parse(
+    document.getElementById("chatroom-id").textContent
 );
 
 const userUsername = JSON.parse(
@@ -10,7 +10,7 @@ const chatSocket = new WebSocket(
     "ws://" +
     window.location.host +
     "/ws/chat/" +
-    roomName +
+    chatroomId +
     "/"
 );
 

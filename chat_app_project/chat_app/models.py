@@ -5,12 +5,12 @@ from account.models import Account
 # Create your models here.
 class ChatRoom(models.Model):
     # Each chat chat has it's name.
-    chat_name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
 
 
-class ChatUsers(models.Model):
+class ChatRoomUsers(models.Model):
     # Group of users is assigned to singel chat.
-    chat = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.PROTECT)
     # There can be many users in a single chatgroup.
     user = models.ForeignKey(Account, on_delete=models.PROTECT)
 

@@ -66,17 +66,33 @@
     <h2>Pending requests</h2>
     <table>
         {% for pending_request in pending %}
-        <td>
-            {{pending_request.user_name}}
-        </td>
-        <td>
-            <form action="{% url 'chat_app:add_friend' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="friend_username" value="{{pending_request.user_name}}">
-                <input type="submit" class="btn btn-secondary" value="Add">
-            </form>
-        </td>
+        <tr>
+            <td>
+                {{pending_request.user_name}}
+            </td>
+            <td>
+                <form action="{% url 'chat_app:add_friend' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="friend_username" value="{{pending_request.user_name}}">
+                    <input type="submit" class="btn btn-secondary" value="Add">
+                </form>
+            </td>
+        </tr>
         {% endfor %}
     </table>
 </div>
+
+<div>
+    <h2>Chatrooms</h2>
+    <table>
+        {% for chatroom in chatrooms %}
+        <tr>
+            <td>
+                <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>{{chatroom.name}}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
 {% endblock %}

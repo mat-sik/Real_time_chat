@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 from account.models import Account
-from chat_app.models import FriendshipRelation, ChatUsers, ChatRoom
+from chat_app.models import FriendshipRelation, ChatRoomUsers, ChatRoom
 
 
 class AddFriendForm(forms.Form):
@@ -27,22 +27,22 @@ class AddFriendForm(forms.Form):
                     friend=friend
                 )
                 messages.add_message(
-                        request, 
-                        messages.INFO, 
-                        "Request sent."
+                    request, 
+                    messages.INFO, 
+                    "Request sent."
                 )
             except IntegrityError:
                 messages.add_message(
-                        request, 
-                        messages.ERROR, 
-                        "You are friends already."
-                    )
+                    request, 
+                    messages.ERROR, 
+                    "You are friends already."
+                )
         else:
             messages.add_message(
-                        request, 
-                        messages.ERROR, 
-                        "You can not add yourself as friend."
-                    )    
+                request, 
+                messages.ERROR, 
+                "You can not add yourself as friend."
+            )    
 
 
 class AddRoomForm(forms.Form):
@@ -73,12 +73,16 @@ class AddRoomForm(forms.Form):
         )
 
     @transaction.atomic
-    def save(self):
-        new_chat = ChatRoom.objects.create(
-            chat_name = self.cleaned_data.get("chat_name")
+    def save(self, request):
+        new_chatroom = ChatRoom.objects.create(
+            name = self.cleaned_data.get("chat_name")
+        )
+        ChatRoomUsers.objects.create(
+                    chatroom = new_chatroom,
+                    user = get_object_or_404(Account, pk=request.user.id)
         )
         for user_id in self.cleaned_data.get("users"): # type: ignore
-                ChatUsers.objects.create(
-                    chat = new_chat,
+                ChatRoomUsers.objects.create(
+                    chatroom = new_chatroom,
                     user = get_object_or_404(Account, pk=user_id)
                 )

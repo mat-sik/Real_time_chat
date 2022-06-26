@@ -32,17 +32,16 @@ class ViewRegister(View):
                 messages.INFO, 
                 "Registration successful, you are logged in."
             )
-        else:
-            messages.add_message(
-                request, 
-                messages.ERROR, 
-                "Registration unsuccessful, try again."
-            )
+            return redirect("chat_app:index")
 
-            context = {"form": form}
-            return render(request, self.template_name, context)
+        messages.add_message(
+            request, 
+            messages.ERROR, 
+            "Registration unsuccessful, try again."
+        )
 
-        return redirect("chat_app:index")
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
 
 class ViewLogin(View):
@@ -69,17 +68,16 @@ class ViewLogin(View):
                 messages.INFO, 
                 "Login successful."
             )
-        else:
-            messages.add_message(
-                request, 
-                messages.ERROR, 
-                "Login unsuccessful, try again."
-            )
+            return redirect("chat_app:index")
 
-            context = {"form": form}
-            return render(request, self.template_name, context)
+        messages.add_message(
+            request, 
+            messages.ERROR, 
+            "Login unsuccessful, try again."
+        )
 
-        return redirect("chat_app:index")
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
 
 class ViewLogout(View):
