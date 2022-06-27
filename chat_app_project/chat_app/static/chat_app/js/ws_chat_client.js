@@ -17,10 +17,27 @@ const chatSocket = new WebSocket(
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
 
-    const newDiv = document.createElement("div");
-    newDiv.textContent = data.username + ": " + data.message + "\n";
-    
-    document.querySelector("#chat-text").appendChild(newDiv);
+    if (data.hasOwnProperty("load")) {
+        const loadedMessages = data.loaded_messages;
+        for (let i = 0; i < loadedMessages.length; i++) {
+            const firstMes = document.querySelector("#message");
+            const newDiv = document.createElement("div");
+            newDiv.id = "message";
+            newDiv.textContent = loadedMessages[i].user__username + ": " + loadedMessages[i].text;
+            document.querySelector("#chat-box").insertBefore(
+                newDiv,
+                firstMes
+            );
+        }
+
+    } else {
+        const newDiv = document.createElement("div");
+        newDiv.id = "message";
+        newDiv.textContent = data.username + ": " + data.message + "\n";
+        
+        document.querySelector("#chat-box").appendChild(newDiv);
+    }
+
 }
 
 document.querySelector("#submit").onclick = function (event) {
@@ -35,4 +52,14 @@ document.querySelector("#submit").onclick = function (event) {
         )
     );
     messageInputDom.value = "";
+}
+
+document.querySelector("#load").onclick = function (event) {
+    chatSocket.send(
+        JSON.stringify(
+            {
+                "load": "1"
+            }
+        )
+    );
 }

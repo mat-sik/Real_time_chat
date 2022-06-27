@@ -4,9 +4,11 @@
 {% block 'sub_contents' %}
 <h1>{{chatroom.name}}</h1>
 
-<div id="chat-text">
+<input id="load" type="button" value="Load More">
+
+<div id="chat-box">
     {% for message in chat_messages %}
-    <div>{{message.user}}: {{message.text}}</div>
+    <div id="message">{{message.user}}: {{message.text}}</div>
     {% endfor %}
 
 </div>

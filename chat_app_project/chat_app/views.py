@@ -146,15 +146,13 @@ class ViewChatRoom(View):
                 ChatRoomUsers.objects.filter(chatroom=chatroom)
             ])
             if request.user in chatroom_users:
-                
-                # Ordering by pub_date isn't required I think.
                 chat_messages = Message.objects.filter(
                     chatroom=chatroom
-                )
+                ).order_by("-pub_date")[:30]
 
                 context = {
                     "chatroom": chatroom,
-                    "chat_messages": chat_messages,
+                    "chat_messages": chat_messages[::-1],
                     }
                 return render(request, self.template_name, context)
 
