@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib import messages
 
 from chat_app.forms import AddFriendForm, AddChatRoomForm
-from chat_app.models import FriendshipRelation, ChatRoom, ChatRoomUsers
+from chat_app.models import FriendshipRelation, ChatRoom, ChatRoomUsers, Message
 from account.models import Account
 
 
@@ -146,8 +146,16 @@ class ViewChatRoom(View):
                 ChatRoomUsers.objects.filter(chatroom=chatroom)
             ])
             if request.user in chatroom_users:
+                
+                # Ordering by pub_date isn't required I think.
+                chat_messages = Message.objects.filter(
+                    chatroom=chatroom
+                )
 
-                context = {"chatroom": chatroom}
+                context = {
+                    "chatroom": chatroom,
+                    "chat_messages": chat_messages,
+                    }
                 return render(request, self.template_name, context)
 
         messages.add_message(

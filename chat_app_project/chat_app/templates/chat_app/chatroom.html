@@ -4,12 +4,18 @@
 {% block 'sub_contents' %}
 <h1>{{chatroom.name}}</h1>
 
-<textarea id="chat-text" cols="80" rows="30"></textarea>
+<div id="chat-text">
+    {% for message in chat_messages %}
+    <div>{{message.user}}: {{message.text}}</div>
+    {% endfor %}
+
+</div>
+
 <input id="input" type="text" size="80">
 <input id="submit" type="button" value="Send">
 
 {{chatroom.id|json_script:"chatroom-id"}}
 {{user.username|json_script:"user-username"}}
-<script src="{% static 'chat_app/js/ws_chat_client.js' %}"></script>
+<script type="module" src="{% static 'chat_app/js/ws_chat_client.js' %}"></script>
 
 {% endblock %}
