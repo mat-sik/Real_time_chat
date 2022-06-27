@@ -2,7 +2,6 @@ from django import forms
 from django.db.utils import IntegrityError
 from django.contrib import messages
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 
 from account.models import Account
 from chat_app.models import FriendshipRelation, ChatRoomUsers, ChatRoom
@@ -66,25 +65,23 @@ class AddChatRoomForm(forms.Form):
     def __init__(self, request, friends=None, *args, **kwargs):
         super(AddChatRoomForm, self).__init__(*args, **kwargs)
         if friends is None:
-            aquired_friends_requests = set([
-                relation.user for relation in
-                FriendshipRelation.objects.filter(friend=request.user)
-            ])
-            # Set of users who were sent request by current user.
-            send_friends_requests = set([
-                relation.friend for relation in
-                FriendshipRelation.objects.filter(user=request.user)
-            ])
-            # Set of users whoes requests has been accepted.
-            friends = aquired_friends_requests.intersection(send_friends_requests)
+            # Ids of users who were sent friend request by current user.
+            sent_requests_uid = FriendshipRelation.objects.filter(
+                user=request.user
+            ).values("friend_id")
 
-        choice_list = [
-            (friend.id, str(friend)) 
-            for friend in friends
-        ]
+            # Ids of users who are friends with current user.
+            friends_uid = FriendshipRelation.objects.filter(
+                friend=request.user # aquired friend request of current user.
+            ).filter(user_id__in=sent_requests_uid).values("user_id")
 
-        self.fields['users'] = forms.MultipleChoiceField(
-            choices=choice_list,
+            # Users who are friends with current user.
+            friends = Account.objects.filter(
+                id__in=friends_uid
+            )
+
+        self.fields['users'] = forms.ModelMultipleChoiceField(
+            queryset=friends,
             required=True
         )
 
@@ -96,10 +93,10 @@ class AddChatRoomForm(forms.Form):
         )
         ChatRoomUsers.objects.create(
             chatroom = new_chatroom,
-            user = get_object_or_404(Account, pk=request.user.id)
+            user = request.user
         )
-        for user_id in self.cleaned_data.get("users"): # type: ignore
+        for user in self.cleaned_data.get("users"): # type: ignore
                 ChatRoomUsers.objects.create(
                     chatroom = new_chatroom,
-                    user = get_object_or_404(Account, pk=user_id)
+                    user = user
                 )

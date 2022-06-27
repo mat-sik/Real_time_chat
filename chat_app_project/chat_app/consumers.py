@@ -1,6 +1,9 @@
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+
+from chat_app.models import Message
 
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
@@ -14,6 +17,10 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+
+    @database_sync_to_async
+    def get_messages(self, chatroom_id):
+        return Message.objects.filter(chatroom_id=chatroom_id)
 
     async def disconnect(self):
         await self.channel_layer.group_discard( #type: ignore
