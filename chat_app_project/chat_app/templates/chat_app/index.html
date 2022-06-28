@@ -26,13 +26,15 @@
                 <td>{{chatroom_users.user.username}}</td>
                 <td>
                     <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
-                        {{chatroom_users.chatroom.name}}
+                        <button class="btn btn-outline-success">
+                            Join Chat
+                        </button>
                     </a>
                 </td>
                 <td>
                     <form action="{% url 'chat_app:del_friend' chatroom_users_id=chatroom_users.id %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" class="btn btn-secondary" value="Delete">
+                        <input type="submit" class="btn btn-outline-danger" value="Delete">
                     </form>
                 </td>
             </th>
@@ -41,10 +43,22 @@
     </div>
 
     <div class="col">
+        <h2>Add friend</h2>
         <form action="{% url 'chat_app:add_friend' %}" method="post">
             {% csrf_token %}
-            {{form_add_friend}}
-            <input type="submit" class="btn btn-primary" value="Add Friend">
+            {% for field in form_add_friend %}
+            <div class="mb-3">
+                {{ field.errors }}
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label_tag }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-outline-warning" value="Add Friend">
         </form>
     </div>
 </div>
@@ -61,7 +75,9 @@
                     </td>
                     <td>
                         <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
-                            {{chatroom_users.chatroom.name}}
+                            <button class="btn btn-outline-success">
+                                Join Chat
+                            </button>
                         </a>
                     </td>
                     <td>
@@ -70,14 +86,14 @@
                                 <form action="{% url 'chat_app:add_friend' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="friend_username" value="{{chatroom_users.user.username}}">
-                                    <input type="submit" class="btn btn-secondary" value="Add">
+                                    <input type="submit" class="btn btn-outline-warning" value="Add">
                                 </form>
                             </li>
                             
                             <li class="list-inline-item">
                                 <form action="{% url 'chat_app:del_pending' chatroom_users_id=chatroom_users.id %}" method="post">
                                     {% csrf_token %}
-                                    <input type="submit" class="btn btn-secondary" value="Decline">
+                                    <input type="submit" class="btn btn-outline-danger" value="Decline">
                                 </form>
                             </li>
                         </ul>
@@ -95,13 +111,15 @@
                     <td>{{chatroom_users.user.username}}</td>
                     <td>
                         <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
-                            {{chatroom_users.chatroom.name}}
+                            <button class="btn btn-outline-success">
+                                Join Chat
+                            </button>
                         </a>
                     </td>
                     <td>
                         <form action="{% url 'chat_app:del_sent' chatroom_users_id=chatroom_users.id %}" method="post">
                             {% csrf_token %}
-                            <input type="submit" class="btn btn-secondary" value="Cancel">
+                            <input type="submit" class="btn btn-outline-danger" value="Cancel">
                         </form>
                     </td>
                 </tr>
@@ -116,7 +134,9 @@
                 <tr>
                     <td>
                         <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>
-                            {{chatroom.name}}
+                            <button class="btn btn-outline-success">
+                                Join : {{chatroom.name}}
+                            </button>
                         </a>
                     </td>
                 </tr>
@@ -126,10 +146,22 @@
     </div>
 
     <div class="col">
+        <h2>Create chatroom with friends</h2>
         <form action="{% url 'chat_app:add_room' %}" method="post">
             {% csrf_token %}
-            {{form_add_room}}
-            <input type="submit" class="btn btn-primary" value="Create Room">
+            {% for field in form_add_room %}
+            <div class="mb-3">
+                {{ field.errors }}
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label_tag }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-outline-warning" value="Create Chatroom">
         </form>
     </div>
 

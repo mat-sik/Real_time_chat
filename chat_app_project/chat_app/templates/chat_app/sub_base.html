@@ -2,16 +2,16 @@
 
 {% block 'contents' %}
 
-    <div class="col">
-        {% block 'sub_contents' %} {% endblock %}
+    {% block 'sub_contents' %} {% endblock %}
 
-        {% block 'go_back' %}
-        <div class="row">
+    {% block 'go_back' %}
+    <div class="row">
+        <div class="col">
             <a href="{% url 'chat_app:index' %}">
                 <button class="btn btn-secondary">Go back</button>
             </a>
         </div>
-        {% endblock %}
     </div>
+    {% endblock %}
 
 {% endblock %}

@@ -4,8 +4,21 @@
 <div class="row">
     <form action="{% url 'chat_app:register' %}" method="post">
         {% csrf_token %}
-        {{form}}
-        <input type="submit" class="btn btn-primary" value="Submit">
+        {% for field in form %}
+        <div class="mb-3">
+            {{ field.errors }}
+            <label class="form-label" for="{{ field.id_for_label }}">
+                {{ field.label_tag }}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="mb-3">
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </div>
     </form>
 </div>
 {% endblock %}

@@ -2,19 +2,36 @@
 {% load static %}
 
 {% block 'sub_contents' %}
-<h1>{{chatroom.name}}</h1>
-
-<input id="load" type="button" value="Load More">
-
-<div id="chat-box">
-    {% for message in chat_messages %}
-    <div id="message">{{message.user}}: {{message.text}}</div>
-    {% endfor %}
-
+<div class="row">
+    <div class="mb-3">
+        <h1>{{chatroom.name}}</h1>
+    </div>
 </div>
 
-<input id="input" type="text" size="80">
-<input id="submit" type="button" value="Send">
+<div class="row">
+    <div class="col">
+        <div class="mb-3">
+            <input id="load" type="button" class="btn btn-outline-info" value="Load More">
+        </div>
+
+        <div class="mb-3">
+            <div id="chat-box">
+                {% for message in chat_messages %}
+                <div id="message">{{message.user}}: {{message.text}}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="mb-1">
+                <input type="text" id="input" class="form-control" size="80">
+            </div>
+            <div class="mb-1">
+                <input type="submit" id="submit" class="btn btn-outline-primary" value="Send">
+            </div>
+        </div>
+    </div>
+</div>
 
 {{chatroom.id|json_script:"chatroom-id"}}
 {{user.username|json_script:"user-username"}}
