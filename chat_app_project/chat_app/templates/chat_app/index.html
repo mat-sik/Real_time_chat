@@ -77,7 +77,7 @@
     <h2>Pending requests</h2>
     <table>
         {% for chatroom_users in private_chatrooms_pending %}
-        <tr>
+        <th>
             <td>
                 {{chatroom_users.user.username}}
             </td>
@@ -97,7 +97,7 @@
                     <input type="submit" class="btn btn-secondary" value="Del">
                 </form>
             </td>
-        </tr>
+        </th>
         {% endfor %}
     </table>
 </div>
