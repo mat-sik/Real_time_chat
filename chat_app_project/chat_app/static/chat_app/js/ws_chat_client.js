@@ -40,6 +40,22 @@ chatSocket.onmessage = function (event) {
 
 }
 
+document.querySelector("#input").addEventListener("keyup", function(event) {
+    if (event.key === 'Enter') {
+        const messageInputDom = document.querySelector("#input");
+        const message = messageInputDom.value;
+        chatSocket.send(
+            JSON.stringify(
+                {
+                    "message": message,
+                    "username": userUsername
+                }
+            )
+        );
+        messageInputDom.value = "";
+    }
+  });
+
 document.querySelector("#submit").onclick = function (event) {
     const messageInputDom = document.querySelector("#input");
     const message = messageInputDom.value;
