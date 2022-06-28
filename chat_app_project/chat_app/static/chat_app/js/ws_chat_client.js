@@ -14,6 +14,8 @@ const chatSocket = new WebSocket(
     "/"
 );
 
+const create
+
 chatSocket.onmessage = function (event) {
     const data = JSON.parse(event.data);
 
@@ -60,7 +62,7 @@ document.querySelector("#input").addEventListener("keyup", function(event) {
         );
         messageInputDom.value = "";
     }
-  });
+});
 
 document.querySelector("#submit").onclick = function (event) {
     const messageInputDom = document.querySelector("#input");
