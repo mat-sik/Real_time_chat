@@ -15,7 +15,21 @@ class AddFriendForm(forms.Form):
         return Account.objects.filter(username=friend_username).count() > 0
 
     def is_initial_friend_request(self, user, friend):
+        """If is inintial user wasn't sent friend request by some friend user."""
         return FriendshipRelation.objects.filter(user=friend, friend=user).count() == 0
+
+    def private_chat_exists(self, user, friend):
+        friends_cids = ChatRoomUsers.objects.filter(
+            user_id=friend.id,
+            chatroom__is_private=True
+        ).values("chatroom__id")
+
+        common_private_chat = ChatRoomUsers.objects.filter(
+            user_id=user.id,
+            chatroom__is_private=True,
+            chatroom__id__in=friends_cids
+        )
+        return common_private_chat.count() == 1
 
     def save(self, request):
         user = request.user
@@ -28,8 +42,11 @@ class AddFriendForm(forms.Form):
                     user=user,
                     friend=friend
                 )
-                # creates private chat with friend
-                if self.is_initial_friend_request(user, friend):
+                # creates private chat with user and friend if is initial
+                # and private chat doesn't exist.
+                if (self.is_initial_friend_request(user, friend) and
+                        not self.private_chat_exists(user, friend)):
+
                     new_chatroom = ChatRoom.objects.create(
                         name = f"{user.username}-{friend.username}_chatroom"
                     )

@@ -163,3 +163,84 @@ class ViewChatRoom(View):
         )
 
         return redirect("chat_app:index")
+
+
+class ViewDeleteFriend(View):
+    template_name = "chat_app/index.html"
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            friend = get_object_or_404(
+                ChatRoomUsers, id=kwargs.get("chatroom_users_id")
+            ).user
+
+            first_relation = get_object_or_404(
+                FriendshipRelation, 
+                user=request.user,
+                friend=friend
+            )
+            second_relation  = get_object_or_404(
+                FriendshipRelation,
+                user=friend,
+                friend=request.user
+            )
+            first_relation.delete()
+            second_relation.delete()
+        else:
+            messages.add_message(
+                request, 
+                messages.ERROR, 
+                "You are not authorised."
+            )
+
+        return redirect("chat_app:index")
+
+
+class ViewDeletePending(View):
+    template_name = "chat_app/index.html"
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            friend = get_object_or_404(
+                ChatRoomUsers, id=kwargs.get("chatroom_users_id")
+            ).user
+
+            relation = get_object_or_404(
+                FriendshipRelation,
+                user = friend,
+                friend = request.user
+            )
+            relation.delete()
+        else:
+            messages.add_message(
+                request, 
+                messages.ERROR, 
+                "You are not authorised."
+            )
+
+        return redirect("chat_app:index")
+
+
+class ViewDeleteSent(View):
+    template_name = "chat_app/index.html"
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            friend = get_object_or_404(
+                ChatRoomUsers, id=kwargs.get("chatroom_users_id")
+            ).user
+
+            relation = get_object_or_404(
+                FriendshipRelation,
+                user = request.user,
+                friend = friend
+            )
+            relation.delete()
+        else:
+            messages.add_message(
+                request, 
+                messages.ERROR, 
+                "You are not authorised."
+            )
+
+        return redirect("chat_app:index")
