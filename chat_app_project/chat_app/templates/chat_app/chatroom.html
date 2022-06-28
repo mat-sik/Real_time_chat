@@ -17,7 +17,7 @@
         <div class="mb-3">
             <div id="chat-box">
                 {% for message in chat_messages %}
-                <div id="message">{{message.user}}: {{message.text}}</div>
+                <div id="message" class="text-break">{{message.user}}: {{message.text}}</div>
                 {% endfor %}
             </div>
         </div>

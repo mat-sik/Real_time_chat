@@ -22,7 +22,10 @@ chatSocket.onmessage = function (event) {
         for (let i = 0; i < loadedMessages.length; i++) {
             const firstMes = document.querySelector("#message");
             const newDiv = document.createElement("div");
+
             newDiv.id = "message";
+            newDiv.className = "text-break";
+
             newDiv.textContent = loadedMessages[i].user__username + ": " + loadedMessages[i].text;
             document.querySelector("#chat-box").insertBefore(
                 newDiv,
@@ -32,7 +35,10 @@ chatSocket.onmessage = function (event) {
 
     } else {
         const newDiv = document.createElement("div");
+
         newDiv.id = "message";
+        newDiv.className = "text-break";
+
         newDiv.textContent = data.username + ": " + data.message + "\n";
         
         document.querySelector("#chat-box").appendChild(newDiv);
