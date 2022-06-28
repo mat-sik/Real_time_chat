@@ -10,6 +10,11 @@ from chat_app.models import FriendshipRelation, ChatRoomUsers, ChatRoom
 class AddFriendForm(forms.Form):
     friend_username = forms.CharField(max_length=30)
 
+    def __init__(self, *args, **kwargs):
+        super(AddFriendForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
+
     def username_exists(self):
         friend_username = self.cleaned_data.get("friend_username")
         return Account.objects.filter(username=friend_username).count() > 0
@@ -101,6 +106,9 @@ class AddChatRoomForm(forms.Form):
             queryset=friends,
             required=True
         )
+
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
 
     @transaction.atomic
     def save(self, request):

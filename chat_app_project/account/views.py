@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
-from account.forms import AccountCreationForm
+from account.forms import AccountCreationForm, CustomAuthenticationForm
 
 # Create your views here.
 class ViewRegister(View):
@@ -45,7 +44,7 @@ class ViewRegister(View):
 
 
 class ViewLogin(View):
-    form_class = AuthenticationForm
+    form_class = CustomAuthenticationForm
     template_name = "account/login.html"
 
     def get(self, request, *args, **kwargs):

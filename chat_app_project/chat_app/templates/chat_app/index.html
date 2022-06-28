@@ -1,138 +1,138 @@
 {% extends 'chat_app/base.html' %}
 
 {% block 'contents' %}
-<div>
-    <h1>Chat</h1>
-</div>
-{% if user.is_authenticated %}
-<div>
-    <p>User is logged in :)</p>
-    <p>Username -->  {{ user.username }}</p>
-    <p>Mail -->  {{ user.email }}</p>
-</div>
-
-<div>
-    <a href="{% url 'chat_app:logout' %}">
-        <button class="btn btn-secondary">Logout</button>
-    </a>
-</div>
-{% else %}
-<div>
-    <p>User is not logged in :(</p>
+<div class="row">
+    <div class="col">
+        <h1>Real Time Chat in Django</h1>
+    </div>
+    <div class="col">
+        <ul class="list-inline">
+            <li class="list-inline-item">Username: {{ user.username }}</li>
+            <li class="list-inline-item">
+                <a href="{% url 'chat_app:logout' %}">
+                    <button class="btn btn-secondary">Logout</button>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 
-<div>
-    <ul class="list-inline">
-        <li class="list-inline-item">
-            <a href="{% url 'chat_app:login' %}">
-                <button class="btn btn-secondary">Login</button>
-            </a>
-        </li>
-        <li class="list-inline-item">
-            <a href="{% url 'chat_app:register' %}">
-                <button class="btn btn-secondary">Register</button>
-            </a>
-        </li>
-    </ul>
-</div>
-{% endif %}
+<div class="row">
+    <div class="col">
+        <h2>Friends list</h2>
+        <table class="table">
+            {% for chatroom_users in private_chatrooms_friends %}
+            <tr>
+                <td>{{chatroom_users.user.username}}</td>
+                <td>
+                    <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
+                        {{chatroom_users.chatroom.name}}
+                    </a>
+                </td>
+                <td>
+                    <form action="{% url 'chat_app:del_friend' chatroom_users_id=chatroom_users.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-secondary" value="Delete">
+                    </form>
+                </td>
+            </th>
+            {% endfor %}
+        </table>
+    </div>
 
-<div>
-    <form action="{% url 'chat_app:add_friend' %}" method="post">
-        {% csrf_token %}
-        {{form_add_friend}}
-        <input type="submit" class="btn btn-primary" value="Submit">
-    </form>
-</div>
-
-<div>
-    <form action="{% url 'chat_app:add_room' %}" method="post">
-        {% csrf_token %}
-        {{form_add_room}}
-        <input type="submit" class="btn btn-primary" value="Submit">
-    </form>
-</div>
-
-<div>
-    <h2>Friends list</h2>
-    <table>
-        {% for chatroom_users in private_chatrooms_friends %}
-        <th>
-            <td>{{chatroom_users.user.username}}</td>
-            <td>
-                <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>{{chatroom_users.chatroom.name}}</a>
-            </td>
-            <td>
-                <form action="{% url 'chat_app:del_friend' chatroom_users_id=chatroom_users.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-secondary" value="Del">
-                </form>
-            </td>
-        </th>
-        {% endfor %}
-    </table>
+    <div class="col">
+        <form action="{% url 'chat_app:add_friend' %}" method="post">
+            {% csrf_token %}
+            {{form_add_friend}}
+            <input type="submit" class="btn btn-primary" value="Add Friend">
+        </form>
+    </div>
 </div>
 
-<div>
-    <h2>Pending requests</h2>
-    <table>
-        {% for chatroom_users in private_chatrooms_pending %}
-        <th>
-            <td>
-                {{chatroom_users.user.username}}
-            </td>
-            <td>
-                <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>{{chatroom_users.chatroom.name}}</a>
-            </td>
-            <td>
-                <form action="{% url 'chat_app:add_friend' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="friend_username" value="{{chatroom_users.user.username}}">
-                    <input type="submit" class="btn btn-secondary" value="Add">
-                </form>
-            </td>
-            <td>
-                <form action="{% url 'chat_app:del_pending' chatroom_users_id=chatroom_users.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-secondary" value="Del">
-                </form>
-            </td>
-        </th>
-        {% endfor %}
-    </table>
-</div>
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <h2>Pending requests</h2>
+            <table class="table">
+                {% for chatroom_users in private_chatrooms_pending %}
+                <tr>
+                    <td>
+                        {{chatroom_users.user.username}}
+                    </td>
+                    <td>
+                        <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
+                            {{chatroom_users.chatroom.name}}
+                        </a>
+                    </td>
+                    <td>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <form action="{% url 'chat_app:add_friend' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="friend_username" value="{{chatroom_users.user.username}}">
+                                    <input type="submit" class="btn btn-secondary" value="Add">
+                                </form>
+                            </li>
+                            
+                            <li class="list-inline-item">
+                                <form action="{% url 'chat_app:del_pending' chatroom_users_id=chatroom_users.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn btn-secondary" value="Decline">
+                                </form>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
-<div>
-    <h2>Sent requests</h2>
-    <table>
-        {% for chatroom_users in private_chatrooms_sent %}
-        <th>
-            <td>{{chatroom_users.user.username}}</td>
-            <td>
-                <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>{{chatroom_users.chatroom.name}}</a>
-            </td>
-            <td>
-                <form action="{% url 'chat_app:del_sent' chatroom_users_id=chatroom_users.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-secondary" value="Del">
-                </form>
-            </td>
-        </th>
-        {% endfor %}
-    </table>
-</div>
+        <div class="row">
+            <h2>Sent requests</h2>
+            <table class="table">
+                {% for chatroom_users in private_chatrooms_sent %}
+                <tr>
+                    <td>{{chatroom_users.user.username}}</td>
+                    <td>
+                        <a href={% url 'chat_app:room' chatroom_id=chatroom_users.chatroom.id %}>
+                            {{chatroom_users.chatroom.name}}
+                        </a>
+                    </td>
+                    <td>
+                        <form action="{% url 'chat_app:del_sent' chatroom_users_id=chatroom_users.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-secondary" value="Cancel">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    
+        <div class="row">
+            <h2>Chatrooms</h2>
+            <table class="table">
+                {% for chatroom in nonprivate_chatrooms %}
+                <tr>
+                    <td>
+                        <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>
+                            {{chatroom.name}}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 
-<div>
-    <h2>Chatrooms</h2>
-    <table>
-        {% for chatroom in nonprivate_chatrooms %}
-        <tr>
-            <td>
-                <a href={% url 'chat_app:room' chatroom_id=chatroom.id %}>{{chatroom.name}}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="col">
+        <form action="{% url 'chat_app:add_room' %}" method="post">
+            {% csrf_token %}
+            {{form_add_room}}
+            <input type="submit" class="btn btn-primary" value="Create Room">
+        </form>
+    </div>
+
 </div>
 
 {% endblock %}

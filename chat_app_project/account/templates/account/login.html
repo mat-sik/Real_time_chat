@@ -4,7 +4,7 @@
 <div class="row">
     <form action="{% url 'chat_app:login' %}" method="post">
         {% csrf_token %}
-        {{form.as_p}}
+        {{form}}
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
 </div>
