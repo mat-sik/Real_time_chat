@@ -24,13 +24,13 @@ App has very basic front end made in bootstrap 5 and some simple js code.
 
 ## Images of app
 
-![](readme_imgs/login_page.png)
+![](readme_imgs/login.png)
 
-![](readme_imgs/register_page.png)
+![](readme_imgs/register.png)
 
-![](readme_imgs/index_page.png)
+![](readme_imgs/index.png)
 
-![](readme_imgs/chat_page.png)
+![](readme_imgs/chat.png)
 
 ## Database
 
